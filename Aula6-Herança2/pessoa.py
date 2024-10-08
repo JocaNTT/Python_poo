@@ -1,4 +1,4 @@
-class Pessoa:# superclasse ou classe mãe
+class Pessoa:
     def __init__(self, nome, idade):
         self._nome = nome
         self._idade = idade
@@ -6,16 +6,15 @@ class Pessoa:# superclasse ou classe mãe
     def info(self):
         print(f"Nome: {self._nome} Idade: {self._idade}")
 
-#Classe filha 1 - Aluno
+# Classe filha 1 - Aluno
 class Aluno(Pessoa):
     def __init__(self, nome, idade, matricula):
-        super().__init__(nome, idade) #Utilizando o costrutor da classe mãe
-        self._matricula = matricula#Utilizando um atributo exclusivo da classe filha
+        super().__init__(nome, idade)  # Utilizando o construtor da classe mãe
+        self._matricula = matricula  # Atributo exclusivo da classe filha
     def estudar(self):
         print(f"{self._nome}, está matriculado com o código: {self._matricula} e continua estudando normalmente")
 
-
-#Classe filha 2 - Professor
+# Classe filha 2 - Professor
 class Professor(Pessoa):
     def __init__(self, nome, idade, disciplina):
         super().__init__(nome, idade)
