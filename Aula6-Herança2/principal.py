@@ -2,15 +2,16 @@ from pessoa import Pessoa, Aluno, Professor
 
 # Função para coletar dados do usuário
 def criar_pessoa():
-    nome = input("Digite o nome: ")
-    idade = int(input("Digite a idade: "))
+    nome = input("Digite o nome do responsável: ")
+    idade = int(input("Digite a idade do responsável: "))
     return Pessoa(nome, idade)
 
 def criar_aluno():
+    escola = input("Digite o nome da escola: ")
     nome = input("Digite o nome do aluno: ")
     idade = int(input("Digite a idade do aluno: "))
-    matricula = input("Digite o código de matrícula: ")
-    return Aluno(nome, idade, matricula)
+    matricula = int(input("Digite o número do código de matrícula: "))
+    return Aluno(nome, idade, matricula, escola)
 
 def criar_professor():
     nome = input("Digite o nome do professor: ")
@@ -20,7 +21,9 @@ def criar_professor():
 
 # Exemplo de uso
 pessoa1 = criar_pessoa()
+aluno1 = criar_aluno()
 prof1 = criar_professor()
 
-pessoa1.info()
+pessoa1.infoResponsavel()
+aluno1.estudar()
 prof1.ensinar()
