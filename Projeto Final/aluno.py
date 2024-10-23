@@ -1,10 +1,18 @@
+# Importa o módulo sqlite3 para trabalhar com banco de dados
 import sqlite3
 
 class Aluno:
     def conexao(self):
+        """
+        Método para estabelecer conexão com o banco de dados
+        Retorna a conexão se bem sucedida, None caso contrário
+        """
         try:
+            # Tenta estabelecer conexão com o banco de dados
             conexao = sqlite3.connect("academia.db")
             consulta = conexao.cursor()
+            
+            # Cria a tabela se ela não existir
             tabela = """
             CREATE TABLE IF NOT EXISTS alunos(
             codigo INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -16,22 +24,35 @@ class Aluno:
             """
             consulta.execute(tabela)
             return conexao
+            
         except sqlite3.Error as erro:
+            # Se houver erro na conexão, exibe mensagem e retorna None
             print(f"Erro ao conectar ao banco de dados: {erro}")
             return None
     
     def cadastrarAluno(self, nome, idade, plano, data_inicio):
+        """
+        Método para cadastrar um novo aluno no banco de dados
+        Parâmetros:
+        - nome: nome do aluno
+        - idade: idade do aluno
+        - plano: código do plano escolhido
+        - data_inicio: data de início na academia
+        """
         try:
+            # Estabelece conexão com o banco
             conexao = self.conexao()
             if conexao is None:
                 return
                 
+            # Prepara e executa o comando SQL de inserção
             sql = "INSERT INTO alunos (nome, idade, plano, data_inicio) VALUES (?, ?, ?, ?)"
             campos = (nome, idade, plano, data_inicio)
             consulta = conexao.cursor()
             consulta.execute(sql, campos)
             conexao.commit()
             
+            # Exibe mensagem específica para cada plano
             if plano == "1":
                 print("Você assinou o Plano Day Use, Treino experimental de 1 dia, válido para musculação, ergometria e cross training.")
             elif plano == "2":
@@ -46,26 +67,35 @@ class Aluno:
             print(consulta.rowcount, "Linha(s) inserida(s) com sucesso")
             
         except sqlite3.Error as erro:
+            # Se houver erro na inserção, exibe mensagem de erro
             print(f"Erro ao cadastrar aluno: {erro}")
         finally:
+            # Garante que a conexão seja fechada
             if conexao:
                 conexao.close()
 
     def consultarAlunos(self):
+        """
+        Método para consultar todos os alunos cadastrados
+        """
         try:
+            # Estabelece conexão com o banco
             conexao = self.conexao()
             if conexao is None:
                 return
                 
+            # Executa a consulta SQL
             consulta = conexao.cursor()
             sql = "SELECT * FROM alunos"
             consulta.execute(sql)
             resultado = consulta.fetchall()
             
+            # Verifica se há alunos cadastrados
             if not resultado:
                 print("Nenhum aluno cadastrado.")
                 return
-                
+            
+            # Exibe as informações de cada aluno
             for itens in resultado:
                 print(f"Código: {itens[0]}")
                 print(f"Nome: {itens[1]}")
@@ -80,17 +110,25 @@ class Aluno:
                 conexao.close()
 
     def deletarAluno(self, codigo_aluno):
+        """
+        Método para deletar um aluno do banco de dados
+        Parâmetro:
+        - codigo_aluno: código do aluno a ser deletado
+        """
         try:
+            # Estabelece conexão com o banco
             conexao = self.conexao()
             if conexao is None:
                 return
                 
+            # Prepara e executa o comando SQL de delete
             sql = "DELETE FROM alunos WHERE codigo = ?"
             campos = (codigo_aluno,)
             consulta = conexao.cursor()
             consulta.execute(sql, campos)
             conexao.commit()
             
+            # Verifica se algum registro foi afetado
             if consulta.rowcount > 0:
                 print(consulta.rowcount, "Linha(s) excluída(s) com sucesso")
             else:
@@ -103,20 +141,32 @@ class Aluno:
                 conexao.close()
 
     def atualizarAluno(self, codigo_aluno, nome, idade, data_inicio):
+        """
+        Método para atualizar informações de um aluno
+        Parâmetros:
+        - codigo_aluno: código do aluno a ser atualizado
+        - nome: novo nome (ou None para não alterar)
+        - idade: nova idade (ou None para não alterar)
+        - data_inicio: nova data de início (ou None para não alterar)
+        """
         try:
+            # Estabelece conexão com o banco
             conexao = self.conexao()
             if conexao is None:
                 return
                 
+            # Trata campo vazio da data
             if data_inicio == '':
                 data_inicio = None
                 
+            # Prepara e executa o comando SQL de update
             sql = "UPDATE alunos SET nome = ?, idade = ?, data_inicio = ? WHERE codigo = ?"
             campos = (nome, idade, data_inicio, codigo_aluno)
             consulta = conexao.cursor()
             consulta.execute(sql, campos)
             conexao.commit()
             
+            # Verifica se algum registro foi afetado
             if consulta.rowcount > 0:
                 print(consulta.rowcount, "Linha(s) atualizada(s) com sucesso")
             else:
@@ -129,17 +179,25 @@ class Aluno:
                 conexao.close()
 
     def consultarAlunoIndividual(self, codigo_aluno):
+        """
+        Método para consultar um aluno específico
+        Parâmetro:
+        - codigo_aluno: código do aluno a ser consultado
+        """
         try:
+            # Estabelece conexão com o banco
             conexao = self.conexao()
             if conexao is None:
                 return
                 
+            # Prepara e executa a consulta SQL
             consulta = conexao.cursor()
             sql = "SELECT * FROM alunos WHERE codigo = ?"
             campos = (codigo_aluno,)
             consulta.execute(sql, campos)        
             resultado = consulta.fetchall()
             
+            # Verifica se o aluno foi encontrado
             if not resultado:
                 print(f"Nenhum aluno encontrado com o código {codigo_aluno}")
                 return
