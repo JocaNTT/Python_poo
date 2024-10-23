@@ -1,14 +1,14 @@
 from aluno import Aluno
 
 def exibir_menu():
-    print("\n--- Menu de Gerenciamento da Academia ---")
+    print(f"\n--- Menu de Gerenciamento da Academia ---")
     print("1. Cadastrar Aluno")
     print("2. Consultar Todos os Alunos")
     print("3. Consultar Aluno Individual")
     print("4. Atualizar Aluno")
     print("5. Deletar Aluno")
     print("6. Consultar Todos os Planos")
-    print("7. Sair")
+    print(f"7. Sair\n")
 
 def main():
     aluno = Aluno()
@@ -19,9 +19,14 @@ def main():
         
         if opcao == '1':
             nome = input("Nome do aluno: ")
-            idade = int(input("Idade do aluno: "))
+            try:
+                idade = int(input("Idade do aluno: "))
+            except ValueError:
+                print("Por favor, digite uma idade válida (número inteiro)")
+                continue
+                
             data_inicio = input("Data de início (AAAA-MM-DD): ")
-            print("Qual plano você gostaria de assinar agora?")
+            print("\nQual plano você gostaria de assinar agora?")
             print("Pressione 1 para escolher o Plano de Day use")
             print("Pressione 2 para escolher o Plano Light")
             print("Pressione 3 para escolher o Plano Plus")
@@ -34,27 +39,45 @@ def main():
             aluno.consultarAlunos()
         
         elif opcao == '3':
-            codigo_aluno = int(input("Digite o código do aluno: "))
-            print(f"\n--- Informações do Aluno ---")
-            aluno.consultarAlunoIndividual(codigo_aluno)
+            try:
+                codigo_aluno = int(input("Digite o código do aluno: "))
+                print(f"\n--- Informações do Aluno ---")
+                aluno.consultarAlunoIndividual(codigo_aluno)
+            except ValueError:
+                print("Por favor, digite um código válido (número inteiro)")
+                continue
         
         elif opcao == '4':
-            codigo_aluno = int(input("Digite o código do aluno que deseja atualizar: "))
-            nome = input("Novo nome: ")
-            idade = input("Nova idade: ")
+            try:
+                codigo_aluno = int(input("Digite o código do aluno que deseja atualizar: "))
+            except ValueError:
+                print("Por favor, digite um código válido (número inteiro)")
+                continue
+                
+            nome = input("Novo nome (deixe em branco para não alterar): ")
+            idade = input("Nova idade (deixe em branco para não alterar): ")
+            data_inicio = input("Nova data de início (AAAA-MM-DD) (deixe em branco para não alterar): ")
 
             if nome == '':
                 nome = None
             if idade == '':
                 idade = None
             else:
-                idade = int(idade)
+                try:
+                    idade = int(idade)
+                except ValueError:
+                    print("Por favor, digite uma idade válida (número inteiro)")
+                    continue
             
             aluno.atualizarAluno(codigo_aluno, nome, idade, data_inicio)
         
         elif opcao == '5':
-            codigo_aluno = int(input("Digite o código do aluno que deseja deletar: "))
-            aluno.deletarAluno(codigo_aluno)
+            try:
+                codigo_aluno = int(input("Digite o código do aluno que deseja deletar: "))
+                aluno.deletarAluno(codigo_aluno)
+            except ValueError:
+                print("Por favor, digite um código válido (número inteiro)")
+                continue
         
         elif opcao == '6':
             print(f"\n--- Lista de Planos ---\n")
